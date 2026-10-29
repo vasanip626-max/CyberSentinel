@@ -76,7 +76,7 @@ def send_real_otp_email(to_email, otp_code):
                             <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto 24px auto;">
                                 <tr>
                                     <td align="center" style="background-color: #09101F; border: 2px solid #00FF99; border-radius: 14px; padding: 22px 10px; box-shadow: 0 0 25px rgba(0, 255, 153, 0.28);">
-                                        <span style="font-family: 'SF Mono', Consolas, Monaco, 'Courier New', monospace; font-size: 38px; font-weight: 800; color: #00FF99; letter-spacing: 12px; margin-left: 12px; display: inline-block;">{spaced_otp}</span>
+                                        <span style="font-family: 'SF Mono', Consolas, Monaco, 'Courier New', monospace; font-size: 38px; font-weight: 800; color: #00FF99; letter-spacing: 12px; margin-left: 12px; display: inline-block;">{otp_code}</span>
                                     </td>
                                 </tr>
                             </table>
@@ -271,18 +271,34 @@ def request_otp():
 def verify_otp():
     data = request.get_json(silent=True) or {}
     email = str(data.get("email", "")).strip().lower()
-    otp_entered = str(data.get("otp", "")).strip()
+    raw_otp = str(data.get("otp", "")).strip()
+
+    import re
+    # Remove any whitespace, dashes, or non-digits
+    otp_entered = re.sub(r"\D", "", raw_otp)
 
     if not email or not otp_entered:
-        return jsonify({"message": "Email and OTP code are required"}), 400
+        return jsonify({"message": "Email and 6-digit OTP code are required"}), 400
 
-    record = otp_collection.find_one({"email": email})
+    record = otp_collection.find_one({"email": {"$regex": f"^{re.escape(email)}$", "$options": "i"}})
 
-    if not record or record.get("otp") != otp_entered:
-        return jsonify({"message": "Invalid 6-digit OTP code"}), 400
+    if not record:
+        return jsonify({"message": "No active OTP request found for this email. Please request a new code."}), 400
 
-    if record.get("expires_at") and datetime.utcnow() > record["expires_at"]:
-        return jsonify({"message": "OTP code has expired. Please request a new one."}), 400
+    db_otp = re.sub(r"\D", "", str(record.get("otp", "")).strip())
+
+    if db_otp != otp_entered:
+        print(f"[OTP MISMATCH] Entered: '{otp_entered}' vs DB: '{db_otp}' for {email}")
+        return jsonify({"message": "Invalid 6-digit OTP code. Please check your latest email."}), 400
+
+    expires_at = record.get("expires_at")
+    if expires_at:
+        now_utc = datetime.utcnow()
+        if isinstance(expires_at, datetime):
+            if expires_at.tzinfo is not None:
+                expires_at = expires_at.replace(tzinfo=None)
+            if now_utc > expires_at:
+                return jsonify({"message": "OTP code has expired. Please request a new one."}), 400
 
     return jsonify({"message": "OTP verified successfully!"}), 200
 
@@ -295,8 +311,11 @@ def verify_otp():
 def reset_password():
     data = request.get_json(silent=True) or {}
     email = str(data.get("email", "")).strip().lower()
-    otp_entered = str(data.get("otp", "")).strip()
+    raw_otp = str(data.get("otp", "")).strip()
     new_password = str(data.get("newPassword", "")).strip()
+
+    import re
+    otp_entered = re.sub(r"\D", "", raw_otp)
 
     if not email or not otp_entered or not new_password:
         return jsonify({"message": "All fields are required"}), 400
@@ -304,18 +323,22 @@ def reset_password():
     if len(new_password) < 6:
         return jsonify({"message": "Password must be at least 6 characters long"}), 400
 
-    record = otp_collection.find_one({"email": email})
+    record = otp_collection.find_one({"email": {"$regex": f"^{re.escape(email)}$", "$options": "i"}})
 
-    if not record or record.get("otp") != otp_entered:
+    if not record:
+        return jsonify({"message": "Invalid or expired OTP session"}), 400
+
+    db_otp = re.sub(r"\D", "", str(record.get("otp", "")).strip())
+    if db_otp != otp_entered:
         return jsonify({"message": "Invalid or unverified OTP session"}), 400
 
     hashed_pass = bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
-    users_collection.update_many({"email": email}, {"$set": {"password": hashed_pass}})
-    novasoft_db["users"].update_many({"email": email}, {"$set": {"password": hashed_pass}})
-    novasoft_db["employees"].update_many({"email": email}, {"$set": {"password": hashed_pass}})
+    users_collection.update_many({"email": {"$regex": f"^{re.escape(email)}$", "$options": "i"}}, {"$set": {"password": hashed_pass}})
+    novasoft_db["users"].update_many({"email": {"$regex": f"^{re.escape(email)}$", "$options": "i"}}, {"$set": {"password": hashed_pass}})
+    novasoft_db["employees"].update_many({"email": {"$regex": f"^{re.escape(email)}$", "$options": "i"}}, {"$set": {"password": hashed_pass}})
 
-    otp_collection.delete_one({"email": email})
+    otp_collection.delete_many({"email": {"$regex": f"^{re.escape(email)}$", "$options": "i"}})
 
     print(f"[PASSWORD RESET SUCCESS] Updated password in MongoDB for user '{email}'")
 

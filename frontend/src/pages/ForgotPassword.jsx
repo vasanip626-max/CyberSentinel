@@ -62,15 +62,17 @@ function ForgotPassword() {
         e.preventDefault();
         setErrorMsg("");
         setSuccessMsg("");
-        if (!otp.trim() || otp.trim().length !== 6) {
-            setErrorMsg("Please enter a valid 6-digit OTP code");
+        const cleanDigits = (otp || "").replace(/\D/g, "").trim();
+        if (!cleanDigits || cleanDigits.length !== 6) {
+            setErrorMsg("Please enter the complete 6-digit OTP code");
             return;
         }
 
         setLoading(true);
         try {
-            const res = await api.post("/forgot-password/verify-otp", { email, otp });
+            const res = await api.post("/forgot-password/verify-otp", { email, otp: cleanDigits });
             setSuccessMsg(res.data.message || "OTP verified!");
+            setOtp(cleanDigits);
             setStep(3);
         } catch (err) {
             setErrorMsg(err.response?.data?.message || "Invalid OTP code");
@@ -97,9 +99,10 @@ function ForgotPassword() {
 
         setLoading(true);
         try {
+            const cleanDigits = (otp || "").replace(/\D/g, "").trim();
             const res = await api.post("/forgot-password/reset-password", {
                 email,
-                otp,
+                otp: cleanDigits,
                 newPassword
             });
             setSuccessMsg(res.data.message || "Password updated successfully!");
@@ -227,12 +230,15 @@ function ForgotPassword() {
                                 <FaKey className="input-icon" style={{ color: "#00C8FF" }} />
                                 <input
                                     type="text"
-                                    maxLength="6"
+                                    maxLength="12"
                                     required
                                     placeholder="e.g. 231775"
                                     value={otp}
-                                    onChange={(e) => setOtp(e.target.value)}
-                                    style={{ fontSize: "18px", letterSpacing: "4px", fontWeight: "800" }}
+                                    onChange={(e) => {
+                                        const digits = e.target.value.replace(/\D/g, "").slice(0, 6);
+                                        setOtp(digits);
+                                    }}
+                                    style={{ fontSize: "20px", letterSpacing: "6px", fontWeight: "800", textAlign: "center" }}
                                 />
                             </div>
                         </div>
