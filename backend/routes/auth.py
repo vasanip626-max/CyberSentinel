@@ -29,14 +29,14 @@ SMTP_PASS   = Config.SMTP_PASS
 
 def send_real_otp_email(to_email, otp_code):
     if not SMTP_USER or not SMTP_PASS:
-        print(f"[SMTP WARNING] Cannot send email to '{to_email}' because SMTP_USER / SMTP_PASS are empty in backend/.env")
-        return False, "SMTP email sender is not configured in backend/.env"
+        print(f"[SMTP WARNING] Cannot send email to '{to_email}' because SMTP_USER / SMTP_PASS are empty")
+        return False, "SMTP email sender is not configured"
 
     try:
         msg = MIMEMultipart()
         msg["From"] = f"CyberSentinel Security <{SMTP_USER}>"
         msg["To"] = to_email
-        msg["Subject"] = f"🔑 CyberSentinel Password Reset OTP Code: {otp_code}"
+        msg["Subject"] = f"🔑 CyberSentinel Security OTP: {otp_code}"
 
         html_body = f"""
         <html>
@@ -56,15 +56,25 @@ def send_real_otp_email(to_email, otp_code):
         """
         msg.attach(MIMEText(html_body, "html"))
 
-        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT, timeout=4)
-        server.starttls()
-        server.login(SMTP_USER, SMTP_PASS)
-        server.sendmail(SMTP_USER, to_email, msg.as_string())
-        server.quit()
-        print(f"[REAL EMAIL DELIVERED SUCCESS] 6-digit OTP {otp_code} sent via SMTP to {to_email}")
-        return True, "Email delivered successfully"
+        # Try Port 465 SSL first (Fastest on cloud & avoids STARTTLS blocking)
+        try:
+            server = smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=5)
+            server.login(SMTP_USER, SMTP_PASS)
+            server.sendmail(SMTP_USER, to_email, msg.as_string())
+            server.quit()
+            print(f"[REAL TIME EMAIL DELIVERED SUCCESS] 6-digit OTP {otp_code} sent via SSL 465 to {to_email}")
+            return True, "Email delivered successfully"
+        except Exception as e1:
+            print(f"[PORT 465 NOTICE] {e1}, attempting Port 587 STARTTLS fallback...")
+            server = smtplib.SMTP("smtp.gmail.com", 587, timeout=5)
+            server.starttls()
+            server.login(SMTP_USER, SMTP_PASS)
+            server.sendmail(SMTP_USER, to_email, msg.as_string())
+            server.quit()
+            print(f"[REAL TIME EMAIL DELIVERED SUCCESS] 6-digit OTP {otp_code} sent via Port 587 to {to_email}")
+            return True, "Email delivered successfully"
     except Exception as e:
-        print(f"[SMTP EMAIL NOTICE] Delivery attempt to {to_email}: {e}")
+        print(f"[SMTP EMAIL ERROR] Could not deliver email to {to_email}: {e}")
         return False, str(e)
 
 
@@ -167,10 +177,16 @@ def request_otp():
     if not email:
         return jsonify({"message": "Email address is required"}), 400
 
-    user = users_collection.find_one({"email": email}) or novasoft_db["users"].find_one({"email": email})
+    import re
+    user = users_collection.find_one({"email": {"$regex": f"^{re.escape(email)}$", "$options": "i"}}) or \
+           novasoft_db["users"].find_one({"email": {"$regex": f"^{re.escape(email)}$", "$options": "i"}})
 
     if not user:
-        return jsonify({"message": "No registered user account found with this email address"}), 404
+        users_collection.insert_one({
+            "email": email,
+            "fullname": email.split("@")[0].capitalize(),
+            "role": "User"
+        })
 
     otp_code = str(random.randint(100000, 999999))
     expires_at = datetime.utcnow() + timedelta(minutes=10)
@@ -181,12 +197,11 @@ def request_otp():
         upsert=True
     )
 
-    # Dispatch email in an asynchronous daemon background thread for instant response time (<50ms)
+    # Dispatch real email in background daemon thread
     threading.Thread(target=send_real_otp_email, args=(email, otp_code), daemon=True).start()
 
     return jsonify({
-        "message": f"6-digit OTP code sent successfully to {email}",
-        "otp": otp_code
+        "message": f"A 6-digit OTP code has been dispatched to {email}. Please check your inbox."
     }), 200
 
 

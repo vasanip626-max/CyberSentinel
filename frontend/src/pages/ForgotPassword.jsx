@@ -47,10 +47,8 @@ function ForgotPassword() {
         setLoading(true);
         try {
             const res = await api.post("/forgot-password/request-otp", { email });
-            setSuccessMsg(res.data.message || `6-digit OTP code sent to ${email}`);
-            if (res.data.otp) {
-                setOtp(res.data.otp);
-            }
+            setSuccessMsg(res.data.message || `A 6-digit OTP code has been dispatched to ${email}`);
+            setOtp("");
             setStep(2);
         } catch (err) {
             setErrorMsg(err.response?.data?.message || "Failed to process OTP request. Please check email address.");
@@ -192,7 +190,7 @@ function ForgotPassword() {
                     }}>
                         <FaPaperPlane style={{ fontSize: "18px", flexShrink: 0 }} />
                         <div>
-                            <strong>OTP Sent:</strong> A 6-digit verification code has been dispatched to <code>{email}</code>. {otp && <span>(Code: <code style={{ color: "#00FF99", fontWeight: "bold" }}>{otp}</code>)</span>}
+                            <strong>OTP Dispatched:</strong> A real-time 6-digit verification code has been dispatched to <code>{email}</code>. Please check your inbox (or Spam/Junk folder) and enter it below.
                         </div>
                     </div>
                 )}
@@ -241,6 +239,26 @@ function ForgotPassword() {
 
                         <button type="submit" className="login-btn" disabled={loading} style={{ background: "linear-gradient(135deg, #00FF99, #00C8FF)", color: "#0F172A" }}>
                             {loading ? <FaSpinner className="fa-spin" /> : "Verify OTP Code"}
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={handleRequestOtp}
+                            disabled={loading}
+                            style={{
+                                background: "none",
+                                border: "none",
+                                color: "#00C8FF",
+                                fontSize: "12px",
+                                cursor: "pointer",
+                                textDecoration: "underline",
+                                marginTop: "14px",
+                                display: "block",
+                                textAlign: "center",
+                                width: "100%"
+                            }}
+                        >
+                            Didn't receive code? Resend OTP
                         </button>
                     </form>
                 )}
