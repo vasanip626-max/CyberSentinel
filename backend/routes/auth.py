@@ -36,24 +36,82 @@ def send_real_otp_email(to_email, otp_code):
         msg = MIMEMultipart()
         msg["From"] = f"CyberSentinel Security <{SMTP_USER}>"
         msg["To"] = to_email
-        msg["Subject"] = f"🔑 CyberSentinel Security OTP: {otp_code}"
+        msg["Subject"] = f"🔑 CyberSentinel Password Reset OTP Code: {otp_code}"
 
-        html_body = f"""
-        <html>
-        <body style="background-color: #0F172A; color: #E2E8F0; font-family: Arial, sans-serif; padding: 30px;">
-            <div style="max-width: 480px; margin: 0 auto; background: #1E293B; border: 1px solid #00C8FF; border-radius: 16px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-                <h2 style="color: #00C8FF; text-align: center; margin-top: 0;">🛡️ CYBER SENTINEL</h2>
-                <h4 style="color: #FFFFFF; text-align: center; margin-bottom: 20px;">Password Reset Verification</h4>
-                <p style="color: #CBD5E1; font-size: 14px;">Hello,</p>
-                <p style="color: #CBD5E1; font-size: 14px;">You requested to reset your password. Use the following 6-digit OTP code to verify your identity:</p>
-                <div style="background: #0F172A; border: 2px solid #00FF99; border-radius: 12px; padding: 16px; text-align: center; margin: 24px 0;">
-                    <span style="font-size: 34px; font-weight: bold; color: #00FF99; letter-spacing: 8px;">{otp_code}</span>
-                </div>
-                <p style="font-size: 12px; color: #94A3B8; text-align: center;">This OTP code is valid for 10 minutes. Do not share this code with anyone.</p>
-            </div>
-        </body>
-        </html>
-        """
+        spaced_otp = "  ".join(list(str(otp_code)))
+
+        html_body = f"""<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberSentinel Password Reset</title>
+</head>
+<body style="margin: 0; padding: 24px 12px; background-color: #0A0F1D; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
+    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td align="center">
+                <!-- Main CyberSentinel Security Card -->
+                <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 480px; background-color: #0F172A; border: 2px solid #00C8FF; border-radius: 20px; box-shadow: 0 12px 40px rgba(0, 200, 255, 0.25); overflow: hidden;">
+                    <!-- Card Header -->
+                    <tr>
+                        <td align="center" style="padding: 38px 28px 16px 28px;">
+                            <div style="display: inline-block; margin-bottom: 6px;">
+                                <span style="font-size: 30px; vertical-align: middle;">🛡️</span>
+                                <span style="color: #00C8FF; font-size: 22px; font-weight: 800; letter-spacing: 2px; vertical-align: middle; margin-left: 8px;">CYBER SENTINEL</span>
+                            </div>
+                            <h3 style="margin: 12px 0 0 0; color: #FFFFFF; font-size: 16px; font-weight: 700; letter-spacing: 0.5px;">Password Reset Verification</h3>
+                        </td>
+                    </tr>
+
+                    <!-- Card Body -->
+                    <tr>
+                        <td style="padding: 10px 32px 24px 32px; color: #CBD5E1; font-size: 14px; line-height: 1.6;">
+                            <p style="margin: 0 0 12px 0; font-weight: 600; color: #F1F5F9;">Hello,</p>
+                            <p style="margin: 0 0 24px 0; color: #94A3B8; font-size: 14px;">
+                                You requested to reset your password. Use the following 6-digit OTP code to verify your identity:
+                            </p>
+
+                            <!-- Glowing Electric-Green OTP Display Box -->
+                            <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto 24px auto;">
+                                <tr>
+                                    <td align="center" style="background-color: #09101F; border: 2px solid #00FF99; border-radius: 14px; padding: 22px 10px; box-shadow: 0 0 25px rgba(0, 255, 153, 0.28);">
+                                        <span style="font-family: 'SF Mono', Consolas, Monaco, 'Courier New', monospace; font-size: 38px; font-weight: 800; color: #00FF99; letter-spacing: 12px; margin-left: 12px; display: inline-block;">{spaced_otp}</span>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Expiry & Security Notice -->
+                            <p style="margin: 0; font-size: 13px; color: #94A3B8; text-align: center; line-height: 1.5;">
+                                This OTP code is valid for <strong style="color: #00C8FF;">10 minutes</strong>. Do not share this code with anyone.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Divider Line -->
+                    <tr>
+                        <td style="padding: 0 32px;">
+                            <div style="border-top: 1px solid rgba(148, 163, 184, 0.18);"></div>
+                        </td>
+                    </tr>
+
+                    <!-- Card Footer -->
+                    <tr>
+                        <td align="center" style="padding: 20px 28px 28px 28px;">
+                            <p style="margin: 0 0 6px 0; font-size: 11px; color: #64748B;">
+                                🔒 Automated Security Dispatch • CyberSentinel AI Threat Detection Platform
+                            </p>
+                            <p style="margin: 0; font-size: 11px; color: #475569;">
+                                If you did not request this verification, please disregard this email or contact support.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>"""
         msg.attach(MIMEText(html_body, "html"))
 
         # Try Port 465 SSL first (Fastest on cloud & avoids STARTTLS blocking)
