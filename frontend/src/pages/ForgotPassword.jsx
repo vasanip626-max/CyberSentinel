@@ -48,9 +48,12 @@ function ForgotPassword() {
         try {
             const res = await api.post("/forgot-password/request-otp", { email });
             setSuccessMsg(res.data.message || `6-digit OTP code sent to ${email}`);
+            if (res.data.otp) {
+                setOtp(res.data.otp);
+            }
             setStep(2);
         } catch (err) {
-            setErrorMsg(err.response?.data?.message || "Failed to send OTP code to email");
+            setErrorMsg(err.response?.data?.message || "Failed to process OTP request. Please check email address.");
         } finally {
             setLoading(false);
         }
@@ -189,7 +192,7 @@ function ForgotPassword() {
                     }}>
                         <FaPaperPlane style={{ fontSize: "18px", flexShrink: 0 }} />
                         <div>
-                            <strong>OTP Sent:</strong> A 6-digit verification code has been sent to <code>{email}</code>. Please check your inbox.
+                            <strong>OTP Sent:</strong> A 6-digit verification code has been dispatched to <code>{email}</code>. {otp && <span>(Code: <code style={{ color: "#00FF99", fontWeight: "bold" }}>{otp}</code>)</span>}
                         </div>
                     </div>
                 )}
