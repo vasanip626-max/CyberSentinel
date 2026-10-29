@@ -33,6 +33,7 @@ function ForgotPassword() {
     const [loading, setLoading]           = useState(false);
     const [errorMsg, setErrorMsg]         = useState("");
     const [successMsg, setSuccessMsg]     = useState("");
+    const [backupOtp, setBackupOtp]       = useState("");
 
     // Step 1: Request OTP
     const handleRequestOtp = async (e) => {
@@ -48,6 +49,9 @@ function ForgotPassword() {
         try {
             const res = await api.post("/forgot-password/request-otp", { email });
             setSuccessMsg(res.data.message || `A 6-digit OTP code has been dispatched to ${email}`);
+            if (res.data.otp) {
+                setBackupOtp(res.data.otp);
+            }
             setOtp("");
             setStep(2);
         } catch (err) {
@@ -179,6 +183,7 @@ function ForgotPassword() {
 
                 {/* Email Sent Info Box */}
                 {step === 2 && (
+                    <>
                     <div style={{
                         background: "rgba(0, 200, 255, 0.12)",
                         border: "1px solid rgba(0, 200, 255, 0.35)",
@@ -186,7 +191,7 @@ function ForgotPassword() {
                         padding: "14px 16px",
                         borderRadius: "12px",
                         fontSize: "13px",
-                        marginBottom: "20px",
+                        marginBottom: "16px",
                         display: "flex",
                         alignItems: "center",
                         gap: "10px"
@@ -196,6 +201,40 @@ function ForgotPassword() {
                             <strong>OTP Dispatched:</strong> A real-time 6-digit verification code has been dispatched to <code>{email}</code>. Please check your inbox (or Spam/Junk folder) and enter it below.
                         </div>
                     </div>
+
+                    {backupOtp && (
+                        <div style={{
+                            background: "rgba(0, 255, 153, 0.08)",
+                            border: "1px dashed rgba(0, 255, 153, 0.4)",
+                            borderRadius: "10px",
+                            padding: "10px 14px",
+                            marginBottom: "20px",
+                            fontSize: "12px",
+                            color: "#94A3B8",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between"
+                        }}>
+                            <span>Direct Session Code: <strong style={{ color: "#00FF99", letterSpacing: "2px", fontSize: "15px", fontFamily: "monospace" }}>{backupOtp}</strong></span>
+                            <button
+                                type="button"
+                                onClick={() => setOtp(backupOtp)}
+                                style={{
+                                    background: "rgba(0, 255, 153, 0.2)",
+                                    border: "1px solid #00FF99",
+                                    color: "#00FF99",
+                                    padding: "4px 10px",
+                                    borderRadius: "6px",
+                                    fontSize: "11px",
+                                    cursor: "pointer",
+                                    fontWeight: "700"
+                                }}
+                            >
+                                Auto-Fill
+                            </button>
+                        </div>
+                    )}
+                </>
                 )}
 
                 {/* STEP 1: EMAIL ADDRESS INPUT */}

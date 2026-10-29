@@ -14,3 +14,7 @@ class Config:
     SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
     SMTP_USER = os.getenv("SMTP_USER", "cybersentinel338@gmail.com")
     SMTP_PASS = os.getenv("SMTP_PASS", "wfabqzrcrlzinvpl")
+    
+    # HTTPS Transactional Email APIs (Port 443 - Bypasses Render Free Tier SMTP Blocks)
+    RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
+    BREVO_API_KEY = os.getenv("BREVO_API_KEY", "")

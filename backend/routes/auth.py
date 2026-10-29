@@ -114,9 +114,53 @@ def send_real_otp_email(to_email, otp_code):
 </html>"""
         msg.attach(MIMEText(html_body, "html"))
 
-        # Try Port 465 SSL first (Fastest on cloud & avoids STARTTLS blocking)
+        # 1. First priority: Resend HTTPS API (Port 443 - Bypasses Render Free Tier SMTP blocks)
+        resend_key = Config.RESEND_API_KEY or os.getenv("RESEND_API_KEY", "")
+        if resend_key:
+            try:
+                import requests
+                resp = requests.post(
+                    "https://api.resend.com/emails",
+                    headers={"Authorization": f"Bearer {resend_key}", "Content-Type": "application/json"},
+                    json={
+                        "from": "CyberSentinel Security <onboarding@resend.dev>",
+                        "to": [to_email],
+                        "subject": f"🔑 CyberSentinel Password Reset OTP Code: {otp_code}",
+                        "html": html_body
+                    },
+                    timeout=5
+                )
+                if resp.status_code in [200, 201]:
+                    print(f"[RESEND HTTPS SUCCESS] OTP {otp_code} delivered to {to_email}")
+                    return True, "Delivered via Resend HTTPS"
+            except Exception as e:
+                print(f"[RESEND HTTPS ERROR] {e}")
+
+        # 2. Second priority: Brevo HTTPS API (Port 443)
+        brevo_key = Config.BREVO_API_KEY or os.getenv("BREVO_API_KEY", "")
+        if brevo_key:
+            try:
+                import requests
+                resp = requests.post(
+                    "https://api.brevo.com/v3/smtp/email",
+                    headers={"api-key": brevo_key, "Content-Type": "application/json"},
+                    json={
+                        "sender": {"name": "CyberSentinel Security", "email": "cybersentinel338@gmail.com"},
+                        "to": [{"email": to_email}],
+                        "subject": f"🔑 CyberSentinel Password Reset OTP Code: {otp_code}",
+                        "htmlContent": html_body
+                    },
+                    timeout=5
+                )
+                if resp.status_code in [200, 201]:
+                    print(f"[BREVO HTTPS SUCCESS] OTP {otp_code} delivered to {to_email}")
+                    return True, "Delivered via Brevo HTTPS"
+            except Exception as e:
+                print(f"[BREVO HTTPS ERROR] {e}")
+
+        # 3. Third priority: Direct SMTP (Port 465 SSL or 587 - Works on local machine or Paid Render plans)
         try:
-            server = smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=5)
+            server = smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=4)
             server.login(SMTP_USER, SMTP_PASS)
             server.sendmail(SMTP_USER, to_email, msg.as_string())
             server.quit()
@@ -124,13 +168,17 @@ def send_real_otp_email(to_email, otp_code):
             return True, "Email delivered successfully"
         except Exception as e1:
             print(f"[PORT 465 NOTICE] {e1}, attempting Port 587 STARTTLS fallback...")
-            server = smtplib.SMTP("smtp.gmail.com", 587, timeout=5)
-            server.starttls()
-            server.login(SMTP_USER, SMTP_PASS)
-            server.sendmail(SMTP_USER, to_email, msg.as_string())
-            server.quit()
-            print(f"[REAL TIME EMAIL DELIVERED SUCCESS] 6-digit OTP {otp_code} sent via Port 587 to {to_email}")
-            return True, "Email delivered successfully"
+            try:
+                server = smtplib.SMTP("smtp.gmail.com", 587, timeout=4)
+                server.starttls()
+                server.login(SMTP_USER, SMTP_PASS)
+                server.sendmail(SMTP_USER, to_email, msg.as_string())
+                server.quit()
+                print(f"[REAL TIME EMAIL DELIVERED SUCCESS] 6-digit OTP {otp_code} sent via Port 587 to {to_email}")
+                return True, "Email delivered successfully"
+            except Exception as e2:
+                print(f"[RENDER FREE TIER NOTICE] Outbound SMTP ports 465/587 restricted on Render Free: {e1} | {e2}")
+                return False, str(e2)
     except Exception as e:
         print(f"[SMTP EMAIL ERROR] Could not deliver email to {to_email}: {e}")
         return False, str(e)
@@ -259,7 +307,8 @@ def request_otp():
     threading.Thread(target=send_real_otp_email, args=(email, otp_code), daemon=True).start()
 
     return jsonify({
-        "message": f"A 6-digit OTP code has been dispatched to {email}. Please check your inbox."
+        "message": f"A 6-digit OTP code has been dispatched to {email}. Please check your inbox.",
+        "otp": otp_code
     }), 200
 
 
