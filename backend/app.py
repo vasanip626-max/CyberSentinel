@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from werkzeug.middleware.proxy_fix import ProxyFix
 from config import Config
 
 from routes.dashboard import dashboard
@@ -10,6 +11,8 @@ from routes.lab import lab, lab_get_employee, lab_employees, lab_csrf_change_pas
 from routes.ai import ai_bp
 
 app = Flask(__name__)
+# Enable reverse-proxy header support (Render / Cloudflare / Nginx)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
 app.config["JWT_SECRET_KEY"] = Config.JWT_SECRET_KEY
 

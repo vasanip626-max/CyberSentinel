@@ -7,6 +7,21 @@ from models.attack_model import save_attack
 
 lab = Blueprint("lab", __name__)
 
+def get_client_ip():
+    """Extract real client IP behind reverse proxies like Render / Vercel."""
+    cf = request.headers.get("CF-Connecting-IP")
+    if cf and cf.strip():
+        return cf.strip()
+    xff = request.headers.get("X-Forwarded-For")
+    if xff:
+        parts = [p.strip() for p in xff.split(",") if p.strip()]
+        if parts:
+            return parts[0]
+    real_ip = request.headers.get("X-Real-IP")
+    if real_ip and real_ip.strip():
+        return real_ip.strip()
+    return request.remote_addr or "127.0.0.1"
+
 # NovaSoft lab users stored in dedicated 'novasoft' database -> 'users' & 'employees' collections
 lab_users = novasoft_db["users"]
 lab_employees_coll = novasoft_db["employees"]
@@ -143,7 +158,7 @@ def lab_login():
 
     def log_failed_login(user_email):
         try:
-            ip = request.remote_addr
+            ip = get_client_ip()
             doc = failed_attempts.find_one({"ip": ip, "email": user_email})
             count = (doc.get("count", 0) + 1) if doc else 1
             failed_attempts.update_one({"ip": ip, "email": user_email}, {"$set": {"count": count}}, upsert=True)
@@ -165,7 +180,7 @@ def lab_login():
     # Dedicated Administrator Account Authentication
     if email == "admin@gmail.com":
         if password == "Admin@123":
-            failed_attempts.delete_many({"ip": request.remote_addr, "email": email})
+            failed_attempts.delete_many({"ip": get_client_ip(), "email": email})
             return jsonify({
                 "message": "Admin login successful",
                 "user": {
@@ -205,7 +220,7 @@ def lab_login():
                 log_failed_login(email)
                 return jsonify({"message": "Invalid email or password"}), 401
 
-    failed_attempts.delete_many({"ip": request.remote_addr, "email": email})
+    failed_attempts.delete_many({"ip": get_client_ip(), "email": email})
 
     return jsonify({
         "message": "Login successful",
@@ -232,7 +247,7 @@ def lab_employees():
 
     if q:
         q_lower = q.lower()
-        ip_addr = request.remote_addr
+        ip_addr = get_client_ip()
 
         # 1. SQL Injection (SQLi) Detection
         sqli_keywords = ["'", "or ", "union", "select", "drop", "--", ";", "1=1", "1'='1"]
@@ -391,7 +406,7 @@ def lab_get_employee(emp_id):
         attack_data = {
             "attack_type": "IDOR",
             "severity": "High",
-            "ip_address": request.remote_addr,
+            "ip_address": get_client_ip(),
             "employee_id": target_id,
             "target_user": target_email,
             "actor_user": actor_identity,
@@ -464,7 +479,7 @@ def lab_csrf_change_password():
     save_attack({
         "attack_type": "CSRF Threat",
         "severity": "Medium",
-        "ip_address": request.remote_addr,
+        "ip_address": get_client_ip(),
         "target_user": user_email,
         "actor_user": "Cross-Site Origin Attacker",
         "description": f"CSRF Request Forgery Attempt: Unauthorized password change initiated for '{user_email}' without CSRF Token",
