@@ -1,5 +1,7 @@
 from flask import Blueprint, request, jsonify
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+
+IST = timezone(timedelta(hours=5, minutes=30))
 
 ai_bp = Blueprint("ai", __name__)
 
@@ -185,7 +187,7 @@ def ai_chat():
             "• **CSRF (Cross-Site Request Forgery)** & Token Verification\n\n"
             "Ask me any question (e.g. *'What is IDOR?'* or *'How to fix SQL Injection in Python?'*)!"
         )
-        return jsonify({"response_text": response_text, "timestamp": datetime.utcnow().isoformat() + "Z"}), 200
+        return jsonify({"response_text": response_text, "timestamp": datetime.now(IST).isoformat()}), 200
 
     # 2. Match Specific Vulnerability Knowledge Base
     attack_key = detect_attack_type(message)
@@ -227,7 +229,7 @@ def ai_chat():
 
     return jsonify({
         "response_text": response_text,
-        "timestamp": datetime.utcnow().isoformat() + "Z"
+        "timestamp": datetime.now(IST).isoformat()
     }), 200
 
 # ===========================
@@ -246,8 +248,9 @@ def generate_incident_report():
     severity = data.get("severity", "Critical")
     payload = data.get("payload", "' OR '1'='1")
 
-    now = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
-    report_id = f"REP-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
+    ist_now = datetime.now(IST)
+    now = ist_now.strftime("%Y-%m-%d %I:%M:%S %p IST")
+    report_id = f"REP-{ist_now.strftime('%Y%m%d%H%M%S')}"
 
     attack_key = detect_attack_type(attack_name) or "sqli"
     kb = CHATBOT_KNOWLEDGE.get(attack_key, CHATBOT_KNOWLEDGE["sqli"])

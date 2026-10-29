@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { formatTimeIST } from "../utils/time";
 import {
     FaShieldAlt,
     FaSearch,
@@ -116,7 +117,7 @@ function Navbar({ unreadCount = 0, latestAttacks = [] }) {
                                         }}>
                                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
                                                 <strong style={{ color: "#FF4D6D", fontSize: "13px" }}>🚨 {a.attack || a.attack_type || "Threat"}</strong>
-                                                <span style={{ color: "#94A3B8", fontSize: "11px", fontWeight: "600" }}>{a.time || "Just Now"}</span>
+                                                <span style={{ color: "#94A3B8", fontSize: "11px", fontWeight: "600" }}>{formatTimeIST(a.time, a.timestamp)}</span>
                                             </div>
                                             <p style={{ color: "#CBD5E1", fontSize: "12px", margin: 0, lineHeight: "1.4" }}>
                                                 User <code>{a.actor_user || "Attacker"}</code> accessed target <code>{a.target_user || a.ip}</code>

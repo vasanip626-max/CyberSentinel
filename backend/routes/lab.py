@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 import bcrypt
-from datetime import datetime
+from datetime import datetime, timezone
 from database import novasoft_db
 from bson.objectid import ObjectId
 from models.attack_model import save_attack
@@ -172,7 +172,7 @@ def lab_login():
                     "actor_user": user_email,
                     "description": f"Brute Force Attempt: {count} consecutive failed login attempts for '{user_email}'",
                     "status": "Detected",
-                    "timestamp": datetime.now()
+                    "timestamp": datetime.now(timezone.utc)
                 })
         except Exception as e:
             print("Failed login logging error:", e)
@@ -261,7 +261,7 @@ def lab_employees():
                 "actor_user": request.headers.get("X-User-Email") or "Anonymous/Attacker",
                 "description": f"SQL Injection Payload Detected: Query param 'q={q}' in employee search endpoint",
                 "status": "Blocked",
-                "timestamp": datetime.now()
+                "timestamp": datetime.now(timezone.utc)
             })
             print(f"[SQLi DETECTED] Query payload '{q}' from IP {ip_addr}")
 
@@ -277,7 +277,7 @@ def lab_employees():
                 "actor_user": request.headers.get("X-User-Email") or "Anonymous/Attacker",
                 "description": f"Cross-Site Scripting (XSS) Vector Detected: Parameter 'q={q}'",
                 "status": "Detected",
-                "timestamp": datetime.now()
+                "timestamp": datetime.now(timezone.utc)
             })
             print(f"[XSS DETECTED] Script vector '{q}' from IP {ip_addr}")
 
@@ -412,7 +412,7 @@ def lab_get_employee(emp_id):
             "actor_user": actor_identity,
             "description": f"IDOR Vulnerability Attempt: User '{actor_identity}' accessed employee record of '{target_email or emp_str}'",
             "status": "Detected",
-            "timestamp": datetime.now()
+            "timestamp": datetime.now(timezone.utc)
         }
         try:
             save_attack(attack_data)
@@ -484,7 +484,7 @@ def lab_csrf_change_password():
         "actor_user": "Cross-Site Origin Attacker",
         "description": f"CSRF Request Forgery Attempt: Unauthorized password change initiated for '{user_email}' without CSRF Token",
         "status": "Detected",
-        "timestamp": datetime.now()
+        "timestamp": datetime.now(timezone.utc)
     })
     print(f"[CSRF DETECTED] Password change triggered for '{user_email}' without Anti-CSRF token")
 

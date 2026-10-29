@@ -12,6 +12,7 @@ import Footer from "../components/Footer";
 
 import { getAttacks } from "../services/attackService";
 import { getDashboard } from "../services/dashboardService";
+import { formatTimeIST } from "../utils/time";
 
 import {
     FaExclamationTriangle,
@@ -118,7 +119,7 @@ function Dashboard() {
                             attack: newest.attack || newest.attack_type || "Security Incident",
                             actor: newest.actor_user || "Attacker",
                             target: newest.target_user || newest.ip || "NovaSoft Target",
-                            time: newest.time || "Just Now"
+                            time: formatTimeIST(newest.time, newest.timestamp)
                         });
                     }
                 }

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaFilePdf, FaShieldAlt, FaTimes, FaPrint } from "react-icons/fa";
 import { generateIncidentReport } from "../services/aiService";
+import { formatTimeIST, getISTDateTimeString } from "../utils/time";
 
 function AttackTable({ attacks: propAttacks }) {
     const [selectedReport, setSelectedReport] = useState(null);
@@ -39,7 +40,7 @@ function AttackTable({ attacks: propAttacks }) {
             console.log("Report Generation Error:", err);
             setSelectedReport({
                 report_id: `REP-${Math.floor(100000 + Math.random() * 900000)}`,
-                generated_at: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
+                generated_at: getISTDateTimeString(),
                 platform: "CyberSentinel AI Incident Response System",
                 target_app: "NovaSoft SaaS Target Application (/lab)",
                 incident_details: {
@@ -178,7 +179,7 @@ function AttackTable({ attacks: propAttacks }) {
                                         {log.severity}
                                     </span>
                                 </td>
-                                <td>{log.time}</td>
+                                <td>{formatTimeIST(log.time, log.timestamp)}</td>
                                 <td>
                                     <span className="status-pill">
                                         {log.status}
