@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+
+:root {
+    --pri:  #6366f1; --pri2: #8b5cf6;
+    --dark: #0f172a; --card: #1e293b;
+    --border:rgba(99,102,241,.2); --text:#e2e8f0; --muted:#94a3b8;
+}
+
+.vlogin-page {
+    min-height:100vh; background:var(--dark);
+    display:flex; flex-direction:column; overflow:hidden; position:relative;
+}
+
+/* blobs */
+.vlogin-blob { position:fixed; border-radius:50%; filter:blur(120px); pointer-events:none; z-index:0; }
+.blob1 { width:600px; height:600px; background:rgba(99,102,241,.15); top:-200px; left:-200px; animation:lbFloat 16s ease-in-out infinite; }
+.blob2 { width:440px; height:440px; background:rgba(139,92,246,.12); bottom:-140px; right:-140px; animation:lbFloat 12s ease-in-out infinite reverse; }
+@keyframes lbFloat { 0%,100%{transform:translate(0,0)} 50%{transform:translate(30px,-30px)} }
+
+.vlogin-grid {
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+        linear-gradient(rgba(99,102,241,.04) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(99,102,241,.04) 1px,transparent 1px);
+    background-size:50px 50px;
+}
+
+/* navbar */
+.vlogin-nav {
+    position:relative; z-index:10;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 60px;
+    background:rgba(15,23,42,.85); backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border);
+}
+.vlogin-logo { display:flex; align-items:center; gap:14px; text-decoration:none; }
+.vlogin-logo-icon {
+    width:42px; height:42px; border-radius:12px;
+    background:linear-gradient(135deg,var(--pri),var(--pri2));
+    display:flex; align-items:center; justify-content:center;
+    color:white; font-size:18px;
+    box-shadow:0 4px 14px rgba(99,102,241,.4);
+}
+.vlogin-logo-text span  { display:block; font-size:18px; font-weight:800; color:white; }
+.vlogin-logo-text small { display:block; font-size:11px; color:var(--muted); }
+.vlogin-nav-right { font-size:14px; color:var(--muted); }
+.vlogin-nav-right a { color:var(--pri); font-weight:600; text-decoration:none; }
+.vlogin-nav-right a:hover { text-decoration:underline; }
+
+/* main */
+.vlogin-main { flex:1; display:flex; position:relative; z-index:5; }
+
+/* left */
+.vlogin-left {
+    width:44%; border-right:1px solid var(--border);
+    background:linear-gradient(160deg,#1e293b,#0f172a);
+    display:flex; align-items:center; justify-content:center; padding:60px 50px;
+}
+.vlogin-left-inner { max-width:380px; }
+.vlogin-brand-icon {
+    width:64px; height:64px; border-radius:18px; margin-bottom:28px;
+    background:linear-gradient(135deg,var(--pri),var(--pri2));
+    color:white; font-size:28px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 8px 24px rgba(99,102,241,.4);
+}
+.vlogin-left-inner h2 { font-size:28px; font-weight:800; color:white; margin-bottom:14px; line-height:1.3; }
+.vlogin-left-inner > p { color:var(--muted); font-size:15px; line-height:1.8; margin-bottom:32px; }
+
+.vlogin-features { display:flex; flex-direction:column; gap:14px; margin-bottom:36px; }
+.vlogin-feature  { display:flex; align-items:center; gap:12px; font-size:14px; color:var(--text); }
+.vlogin-feature svg { color:#22c55e; font-size:15px; flex-shrink:0; }
+
+/* mini dashboard card */
+.vlogin-mini-card {
+    background:var(--card); border:1px solid var(--border); border-radius:16px; overflow:hidden;
+}
+.vlogin-mini-card-header {
+    display:flex; align-items:center; gap:7px;
+    padding:12px 16px; background:rgba(255,255,255,.04);
+    border-bottom:1px solid var(--border); font-size:12px; color:var(--muted);
+}
+.vlogin-dot { width:10px; height:10px; border-radius:50%; }
+.d-red{background:#ef4444;} .d-yellow{background:#f59e0b;} .d-green{background:#22c55e;}
+.vlogin-mini-card-header span { margin-left:6px; }
+.vlogin-mini-stats { display:flex; gap:0; }
+.vlogin-mini-stats > div {
+    flex:1; padding:18px 16px; text-align:center;
+    border-right:1px solid var(--border);
+}
+.vlogin-mini-stats > div:last-child { border-right:none; }
+.vlogin-mini-stats strong { display:block; font-size:20px; font-weight:800; color:white; }
+.vlogin-mini-stats span   { font-size:11px; color:var(--muted); }
+
+/* right */
+.vlogin-right { flex:1; padding:60px; display:flex; flex-direction:column; justify-content:center; }
+.vlogin-right h2 { font-size:28px; font-weight:800; color:white; margin-bottom:8px; }
+.vlogin-sub { color:var(--muted); font-size:14px; margin-bottom:36px; }
+
+/* form */
+.vlogin-form { display:flex; flex-direction:column; gap:20px; max-width:460px; }
+.vlogin-field { display:flex; flex-direction:column; gap:8px; }
+.vlogin-field label { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); }
+.vlogin-input-wrap {
+    display:flex; align-items:center; gap:12px;
+    border:1.5px solid var(--border); border-radius:12px;
+    padding:0 16px; height:50px; background:rgba(255,255,255,.04); transition:.25s;
+}
+.vlogin-input-wrap:focus-within { border-color:var(--pri); box-shadow:0 0 0 4px rgba(99,102,241,.15); background:rgba(99,102,241,.06); }
+.vlogin-input-wrap.err { border-color:#ef4444; }
+.vlogin-icon { color:var(--muted); font-size:15px; flex-shrink:0; }
+.vlogin-input-wrap input { flex:1; border:none; outline:none; background:transparent; font-size:15px; color:var(--text); }
+.vlogin-input-wrap input::placeholder { color:#475569; }
+.vlogin-field small { font-size:12px; color:#ef4444; }
+
+.vlogin-eye { background:none; border:none; color:var(--muted); cursor:pointer; font-size:16px; padding:4px; transition:color .2s; }
+.vlogin-eye:hover { color:var(--pri); }
+
+.vlogin-row { display:flex; justify-content:space-between; align-items:center; }
+.vlogin-check { display:flex; align-items:center; gap:8px; font-size:14px; color:var(--muted); cursor:pointer; }
+.vlogin-check input { accent-color:var(--pri); width:16px; height:16px; }
+.vlogin-forgot { font-size:13px; font-weight:600; color:var(--pri); text-decoration:none; }
+.vlogin-forgot:hover { text-decoration:underline; }
+
+.vlogin-btn {
+    height:50px; border:none; border-radius:12px;
+    background:linear-gradient(135deg,var(--pri),var(--pri2));
+    color:white; font-size:15px; font-weight:700; cursor:pointer; transition:.3s;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    box-shadow:0 6px 20px rgba(99,102,241,.35);
+}
+.vlogin-btn:hover:not(:disabled) { transform:translateY(-3px); box-shadow:0 10px 28px rgba(99,102,241,.45); }
+.vlogin-btn:disabled { opacity:.7; cursor:not-allowed; }
+.vlogin-spinner { width:20px; height:20px; border:3px solid rgba(255,255,255,.3); border-top-color:white; border-radius:50%; animation:spin .7s linear infinite; display:inline-block; }
+@keyframes spin { to{transform:rotate(360deg)} }
+
+.vlogin-divider { display:flex; align-items:center; gap:12px; }
+.vlogin-divider::before, .vlogin-divider::after { content:''; flex:1; height:1px; background:var(--border); }
+.vlogin-divider span { color:var(--muted); font-size:13px; }
+
+.vlogin-register { text-align:center; font-size:14px; color:var(--muted); }
+.vlogin-register a { color:var(--pri); font-weight:600; text-decoration:none; }
+.vlogin-register a:hover { text-decoration:underline; }
+
+/* responsive */
+@media(max-width:900px){ .vlogin-left{display:none;} .vlogin-right{padding:40px 28px;} }
+@media(max-width:520px){ .vlogin-nav{padding:16px 20px;} }

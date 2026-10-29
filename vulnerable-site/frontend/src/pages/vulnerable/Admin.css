@@ -1,0 +1,173 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+
+:root {
+    --pri:#6366f1; --pri2:#8b5cf6;
+    --dark:#0f172a; --card:#1e293b; --card2:#263148;
+    --border:rgba(99,102,241,.2); --text:#e2e8f0; --muted:#94a3b8;
+}
+
+.vadmin-page { min-height:100vh; background:var(--dark); display:flex; flex-direction:column; position:relative; overflow:hidden; }
+
+/* blobs */
+.vadmin-blob { position:fixed; border-radius:50%; filter:blur(120px); pointer-events:none; z-index:0; }
+.vablob1 { width:500px; height:500px; background:rgba(99,102,241,.12); top:-150px; left:-150px; animation:aFloat 16s ease-in-out infinite; }
+.vablob2 { width:380px; height:380px; background:rgba(139,92,246,.10); bottom:-100px; right:-100px; animation:aFloat 12s ease-in-out infinite reverse; }
+@keyframes aFloat { 0%,100%{transform:translate(0,0)} 50%{transform:translate(30px,-25px)} }
+.vadmin-grid { position:fixed; inset:0; z-index:0; pointer-events:none; background-image:linear-gradient(rgba(99,102,241,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,.04) 1px,transparent 1px); background-size:50px 50px; }
+
+/* navbar */
+.vadmin-nav {
+    position:relative; z-index:10;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 40px;
+    background:rgba(15,23,42,.9); backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border);
+}
+.vadmin-logo { display:flex; align-items:center; gap:14px; }
+.vadmin-logo-icon {
+    width:42px; height:42px; border-radius:12px;
+    background:linear-gradient(135deg,var(--pri),var(--pri2));
+    display:flex; align-items:center; justify-content:center;
+    color:white; font-size:18px; box-shadow:0 4px 14px rgba(99,102,241,.4);
+}
+.vadmin-logo span  { display:block; font-size:18px; font-weight:800; color:white; }
+.vadmin-logo small { display:block; font-size:11px; color:var(--muted); }
+.vadmin-nav-right { display:flex; align-items:center; gap:14px; }
+.vadmin-warning {
+    display:flex; align-items:center; gap:7px;
+    background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.35);
+    color:#fca5a5; padding:7px 14px; border-radius:8px; font-size:13px; font-weight:600;
+}
+.vadmin-back-btn {
+    text-decoration:none; color:var(--muted); font-size:13px; font-weight:600;
+    padding:8px 16px; border-radius:8px; border:1px solid var(--border); transition:.2s;
+}
+.vadmin-back-btn:hover { color:white; border-color:rgba(99,102,241,.5); }
+
+/* layout */
+.vadmin-layout { display:flex; flex:1; position:relative; z-index:5; }
+
+/* sidebar */
+.vadmin-sidebar {
+    width:230px; flex-shrink:0;
+    background:var(--card); border-right:1px solid var(--border);
+    padding:28px 14px; display:flex; flex-direction:column; gap:22px;
+}
+.vadmin-profile {
+    display:flex; align-items:center; gap:12px;
+    padding:14px; background:rgba(99,102,241,.1); border-radius:12px;
+    border:1px solid var(--border);
+}
+.vadmin-profile-icon {
+    width:42px; height:42px; border-radius:10px;
+    background:linear-gradient(135deg,var(--pri),var(--pri2));
+    color:white; font-size:18px;
+    display:flex; align-items:center; justify-content:center;
+}
+.vadmin-profile p     { font-size:13px; font-weight:700; color:white; }
+.vadmin-profile small { font-size:11px; color:var(--muted); }
+.vadmin-sidenav { display:flex; flex-direction:column; gap:4px; }
+.vadmin-navbtn {
+    display:flex; align-items:center; gap:12px;
+    width:100%; padding:12px 14px; border:none; border-radius:10px;
+    background:transparent; color:var(--muted);
+    font-size:13px; font-weight:500; cursor:pointer; transition:.25s; text-align:left;
+}
+.vadmin-navbtn svg { font-size:15px; }
+.vadmin-navbtn:hover { background:rgba(99,102,241,.1); color:white; }
+.vadmin-navbtn.va-active {
+    background:linear-gradient(135deg,var(--pri),var(--pri2));
+    color:white; box-shadow:0 4px 14px rgba(99,102,241,.3);
+}
+
+/* main */
+.vadmin-main { flex:1; padding:36px 40px; overflow-y:auto; }
+.vadmin-page-title { margin-bottom:28px; }
+.vadmin-page-title h2 { font-size:26px; font-weight:800; color:white; }
+.vadmin-page-title p  { color:var(--muted); font-size:14px; margin-top:4px; }
+
+/* stat cards */
+.vadmin-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:18px; margin-bottom:28px; }
+.vadmin-stat-card {
+    background:var(--card); border:1px solid var(--border); border-radius:18px;
+    padding:22px 18px; display:flex; align-items:center; gap:16px;
+    border-left:3px solid var(--c); transition:.3s;
+}
+.vadmin-stat-card:hover { transform:translateY(-4px); box-shadow:0 14px 35px rgba(0,0,0,.3); }
+.vadmin-stat-icon {
+    width:48px; height:48px; border-radius:12px; background:var(--c);
+    color:white; font-size:20px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.vadmin-stat-card h3 { font-size:24px; font-weight:800; color:white; }
+.vadmin-stat-card p  { font-size:12px; color:var(--muted); margin-top:3px; }
+
+/* alert */
+.vadmin-alert-box {
+    background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.3); border-radius:14px;
+    padding:18px 22px; display:flex; align-items:flex-start; gap:14px; margin-bottom:28px;
+}
+.vadmin-alert-box > svg { color:#ef4444; font-size:20px; flex-shrink:0; margin-top:3px; }
+.vadmin-alert-box strong { color:#fca5a5; font-size:14px; }
+.vadmin-alert-box p { color:#f87171; font-size:13px; margin-top:5px; line-height:1.6; }
+
+/* table */
+.vadmin-recent h3 { font-size:18px; font-weight:700; color:white; margin-bottom:16px; }
+.vadmin-table { width:100%; border-collapse:collapse; background:var(--card); border-radius:16px; overflow:hidden; border:1px solid var(--border); }
+.vadmin-table th { background:rgba(99,102,241,.1); color:var(--muted); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; padding:14px 16px; text-align:left; border-bottom:1px solid var(--border); }
+.vadmin-table td { padding:14px 16px; font-size:14px; color:var(--text); border-bottom:1px solid rgba(99,102,241,.08); }
+.vadmin-table tr:last-child td { border-bottom:none; }
+.vadmin-table tr:hover td { background:rgba(99,102,241,.05); }
+.vadmin-table code { background:rgba(99,102,241,.1); padding:3px 8px; border-radius:6px; font-size:13px; color:var(--pri); }
+
+/* badges */
+.vadmin-badge { display:inline-block; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; }
+.badge-success   { background:rgba(34,197,94,.15);  color:#22c55e; }
+.badge-blocked   { background:rgba(239,68,68,.15);  color:#ef4444; }
+.badge-active    { background:rgba(34,197,94,.15);  color:#22c55e; }
+.badge-suspended { background:rgba(239,68,68,.15);  color:#ef4444; }
+.vadmin-role-badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; }
+.role-admin { background:rgba(99,102,241,.2); color:var(--pri); }
+.role-user  { background:rgba(148,163,184,.1); color:var(--muted); }
+.vadmin-plan-badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; }
+.plan-enterprise { background:rgba(139,92,246,.2); color:#a78bfa; }
+.plan-pro        { background:rgba(99,102,241,.15); color:var(--pri); }
+.plan-starter    { background:rgba(148,163,184,.1); color:var(--muted); }
+
+.vadmin-view-btn { display:flex; align-items:center; gap:6px; background:rgba(99,102,241,.15); color:var(--pri); border:none; padding:7px 14px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; transition:.2s; }
+.vadmin-view-btn:hover { background:var(--pri); color:white; }
+
+/* database */
+.vadmin-db-box { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:28px; }
+.vadmin-db-warning { display:flex; align-items:center; gap:10px; background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.3); border-radius:10px; padding:14px 18px; margin-bottom:22px; color:#fca5a5; font-size:13px; font-weight:600; }
+.vadmin-db-box label { font-size:12px; font-weight:700; color:var(--muted); display:block; margin-bottom:10px; text-transform:uppercase; letter-spacing:.5px; }
+.vadmin-sql-input { width:100%; border:1.5px solid var(--border); border-radius:10px; padding:14px; font-size:14px; font-family:monospace; color:var(--text); background:rgba(15,23,42,.8); resize:vertical; outline:none; transition:.25s; }
+.vadmin-sql-input:focus { border-color:var(--pri); box-shadow:0 0 0 4px rgba(99,102,241,.15); }
+.vadmin-run-btn { display:flex; align-items:center; gap:8px; margin-top:14px; background:linear-gradient(135deg,var(--pri),var(--pri2)); color:white; border:none; padding:12px 24px; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; transition:.25s; }
+.vadmin-run-btn:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(99,102,241,.35); }
+
+/* vuln list */
+.vadmin-vuln-list { display:flex; flex-direction:column; gap:14px; }
+.vadmin-vuln-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px 22px; display:flex; align-items:flex-start; gap:16px; border-left:3px solid; }
+.vadmin-vuln-card strong { font-size:15px; color:white; display:block; margin-bottom:5px; }
+.vadmin-vuln-card p { font-size:13px; color:var(--muted); line-height:1.6; }
+.vadmin-vuln-badge { padding:4px 12px; border-radius:20px; font-size:12px; font-weight:700; flex-shrink:0; white-space:nowrap; }
+.severity-critical { background:rgba(239,68,68,.2); color:#ef4444; }
+.severity-high     { background:rgba(245,158,11,.2); color:#f59e0b; }
+.severity-medium   { background:rgba(99,102,241,.2); color:var(--pri); }
+.vuln-critical { border-left-color:#ef4444; }
+.vuln-high     { border-left-color:#f59e0b; }
+.vuln-medium   { border-left-color:var(--pri); }
+
+/* settings */
+.vadmin-settings-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; background:var(--card); border:1px solid var(--border); border-radius:18px; padding:28px; }
+.vadmin-setting-field { display:flex; flex-direction:column; gap:8px; }
+.vadmin-setting-field label { font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; }
+.vadmin-setting-input { border:1.5px solid var(--border); border-radius:10px; padding:12px 14px; font-size:14px; color:var(--text); background:rgba(15,23,42,.8); outline:none; transition:.25s; }
+.vadmin-setting-input:focus { border-color:var(--pri); box-shadow:0 0 0 4px rgba(99,102,241,.15); }
+.vadmin-save-btn { grid-column:1/-1; display:flex; align-items:center; justify-content:center; gap:8px; background:linear-gradient(135deg,var(--pri),var(--pri2)); color:white; border:none; padding:14px; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; transition:.3s; }
+.vadmin-save-btn:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(99,102,241,.35); }
+
+/* responsive */
+@media(max-width:900px){ .vadmin-sidebar{display:none;} .vadmin-main{padding:24px 20px;} }
+@media(max-width:600px){ .vadmin-stats{grid-template-columns:1fr 1fr;} .vadmin-settings-grid{grid-template-columns:1fr;} }

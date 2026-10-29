@@ -1,0 +1,85 @@
+.employees-page{
+
+    min-height:100vh;
+
+    background:#f3f6fb;
+
+    padding:40px;
+
+}
+
+.employees-page h1{
+
+    color:#1e293b;
+
+    margin-bottom:30px;
+
+}
+
+.employee-list{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:25px;
+
+}
+
+.employee-card{
+
+    background:white;
+
+    border-radius:12px;
+
+    padding:25px;
+
+    box-shadow:0 10px 20px rgba(0,0,0,.08);
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.employee-card:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:0 15px 30px rgba(37,99,235,.15);
+
+}
+
+.employee-card h3{
+
+    margin-bottom:10px;
+
+    color:#2563eb;
+
+}
+
+.employee-card p{
+
+    margin-bottom:8px;
+
+    color:#555;
+
+}
+
+.employee-card span{
+
+    color:#777;
+
+    font-size:14px;
+
+}
+
+@media(max-width:768px){
+
+.employee-list{
+
+grid-template-columns:1fr;
+
+}
+
+}

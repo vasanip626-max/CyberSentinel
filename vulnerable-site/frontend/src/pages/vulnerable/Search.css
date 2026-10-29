@@ -1,0 +1,292 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*, *::before, *::after {
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.vsearch-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f0f4ff, #e8f0fe, #dbeafe);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* blobs */
+.vsearch-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    pointer-events: none;
+    z-index: 0;
+}
+.vsblob1 { width:460px; height:460px; background:rgba(11,60,145,.10); top:-140px; left:-140px; animation:bFloat 11s ease-in-out infinite; }
+.vsblob2 { width:340px; height:340px; background:rgba(34,197,94,.07); bottom:-80px; right:-80px; animation:bFloat 9s ease-in-out infinite reverse; }
+@keyframes bFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(28px)} }
+
+/* navbar */
+.vsearch-nav {
+    position: relative; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 60px;
+    background: rgba(255,255,255,.75);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(11,60,145,.1);
+}
+.vsearch-logo {
+    display:flex; align-items:center; gap:10px;
+    text-decoration:none; font-size:20px; font-weight:700; color:#0B3C91;
+}
+.vsearch-logo svg { font-size:26px; }
+.vsearch-navlinks { display:flex; gap:28px; }
+.vsearch-navlinks a { text-decoration:none; color:#374151; font-weight:500; font-size:15px; transition:.2s; }
+.vsearch-navlinks a:hover { color:#0B3C91; }
+.vsearch-nav-badge {
+    display:flex; align-items:center; gap:7px;
+    font-size:13px; font-weight:600; color:#0B3C91;
+    background:#dbeafe; padding:8px 16px; border-radius:30px;
+}
+
+/* hero */
+.vsearch-hero {
+    position: relative; z-index: 5;
+    text-align: center;
+    padding: 70px 20px 50px;
+}
+.vsearch-hero h1 {
+    font-size: 52px; font-weight: 700; color: #0B3C91; margin-bottom: 14px;
+}
+.vsearch-hero h1 span { color: #2563eb; }
+.vsearch-hero > p {
+    color: #6b7280; font-size: 17px; margin-bottom: 40px;
+}
+
+/* search bar */
+.vsearch-bar {
+    display: flex; align-items: center;
+    max-width: 680px; margin: 0 auto;
+    background: #fff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 6px 6px 6px 20px;
+    box-shadow: 0 10px 40px rgba(11,60,145,.12);
+    transition: border-color .25s, box-shadow .25s;
+    gap: 10px;
+}
+.vsearch-bar:focus-within {
+    border-color: #0B3C91;
+    box-shadow: 0 10px 40px rgba(11,60,145,.2);
+}
+.vsearch-bar-icon { color:#9ca3af; font-size:18px; flex-shrink:0; }
+.vsearch-bar input {
+    flex:1; border:none; outline:none;
+    font-size:15px; color:#1f2937; background:transparent;
+}
+.vsearch-bar input::placeholder { color:#9ca3af; }
+.vsearch-clear {
+    background:none; border:none; color:#9ca3af; cursor:pointer;
+    font-size:16px; padding:4px 8px; transition:color .2s;
+}
+.vsearch-clear:hover { color:#ef4444; }
+.vsearch-submit {
+    background: linear-gradient(135deg,#0B3C91,#2563eb);
+    color: white; border: none;
+    padding: 12px 28px; border-radius: 12px;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: .3s; white-space: nowrap;
+}
+.vsearch-submit:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(11,60,145,.25); }
+
+/* results */
+.vsearch-results {
+    position: relative; z-index: 5;
+    width: 90%; max-width: 1200px;
+    margin: 0 auto 60px;
+}
+.vsearch-count {
+    font-size: 15px; color: #6b7280; font-weight: 500; margin-bottom: 24px;
+}
+
+.vsearch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.vsearch-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 8px 30px rgba(11,60,145,.08);
+    border: 1px solid rgba(11,60,145,.07);
+    display: flex; gap: 20px; align-items: flex-start;
+    transition: .3s;
+}
+.vsearch-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 45px rgba(11,60,145,.14);
+}
+
+.vsearch-avatar {
+    width: 56px; height: 56px; flex-shrink: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg,#0B3C91,#2563eb);
+    color: white; font-size: 22px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.vsearch-info { flex:1; }
+.vsearch-info h3 { font-size:17px; font-weight:700; color:#111827; margin-bottom:6px; }
+
+.vsearch-role {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; color: #0B3C91; font-weight: 600; margin-bottom: 4px;
+}
+.vsearch-dept {
+    display: inline-block;
+    font-size: 12px; color: #6b7280;
+    background: #f3f4f6; padding: 3px 10px; border-radius: 20px;
+    margin-bottom: 14px;
+}
+
+.vsearch-details { display:flex; flex-direction:column; gap:7px; }
+.vsearch-details div {
+    display:flex; align-items:center; gap:8px;
+    font-size:13px; color:#374151;
+}
+.vsearch-details svg { color:#9ca3af; font-size:13px; flex-shrink:0; }
+
+/* empty state */
+.vsearch-empty {
+    text-align:center; padding:80px 20px; color:#9ca3af;
+}
+.vsearch-empty svg { font-size:60px; margin-bottom:18px; opacity:.5; }
+.vsearch-empty p { font-size:16px; }
+
+/* footer */
+.vsearch-footer {
+    margin-top: auto;
+    background: #0B3C91; color:white;
+    text-align:center; padding:30px 20px;
+    font-size:14px; opacity:.9;
+    position:relative; z-index:5;
+}
+
+/* Reflected Query Box */
+.vsearch-reflection-box {
+    margin: 20px auto 0;
+    max-width: 680px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    padding: 12px 18px;
+    font-size: 14px;
+    color: #1e293b;
+    box-shadow: 0 4px 15px rgba(11, 60, 145, 0.08);
+    word-break: break-all;
+}
+.vsearch-reflection-label {
+    font-weight: 600;
+    color: #64748b;
+    margin-right: 6px;
+}
+.vsearch-reflection-content {
+    color: #0b3c91;
+    font-weight: 700;
+}
+
+/* Attack Visual Banners */
+.vsearch-sqli-alert {
+    margin: 16px auto 0;
+    max-width: 680px;
+    background: #eff6ff;
+    border: 1.5px solid #3b82f6;
+    border-left: 5px solid #2563eb;
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-align: left;
+    color: #1e3a8a;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12);
+}
+.vsearch-sqli-alert svg {
+    font-size: 24px;
+    color: #2563eb;
+    flex-shrink: 0;
+}
+.vsearch-sqli-alert strong {
+    font-size: 14px;
+    display: block;
+    color: #1d4ed8;
+}
+.vsearch-sqli-alert p {
+    font-size: 13px;
+    margin: 2px 0 0;
+    color: #475569;
+}
+
+.vsearch-xss-alert {
+    margin: 16px auto 0;
+    max-width: 680px;
+    background: #fef2f2;
+    border: 1.5px solid #f87171;
+    border-left: 5px solid #ef4444;
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-align: left;
+    color: #991b1b;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.12);
+}
+.vsearch-xss-alert svg {
+    font-size: 24px;
+    color: #ef4444;
+    flex-shrink: 0;
+}
+.vsearch-xss-alert strong {
+    font-size: 14px;
+    display: block;
+    color: #b91c1c;
+}
+.vsearch-xss-alert p {
+    font-size: 13px;
+    margin: 2px 0 0;
+    color: #64748b;
+}
+
+/* Profile Link Button */
+.vsearch-profile-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    padding: 8px 16px;
+    background: #f1f5f9;
+    color: #0b3c91;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+    border: 1px solid #cbd5e1;
+}
+.vsearch-profile-btn:hover {
+    background: #0b3c91;
+    color: #ffffff;
+    border-color: #0b3c91;
+    transform: translateX(4px);
+}
+
+/* responsive */
+@media(max-width:768px){
+    .vsearch-nav { padding:16px 20px; flex-wrap:wrap; gap:12px; }
+    .vsearch-navlinks { display:none; }
+    .vsearch-hero h1 { font-size:36px; }
+    .vsearch-grid { grid-template-columns:1fr; }
+}

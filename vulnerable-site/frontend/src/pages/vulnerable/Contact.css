@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+
+:root { --pri:#6366f1; --pri2:#8b5cf6; --dark:#0f172a; --card:#1e293b; --border:rgba(99,102,241,.2); --text:#e2e8f0; --muted:#94a3b8; }
+
+.vcontact-page { min-height:100vh; background:var(--dark); display:flex; flex-direction:column; position:relative; overflow-x:hidden; }
+
+/* blobs */
+.vcontact-blob { position:fixed; border-radius:50%; filter:blur(120px); pointer-events:none; z-index:0; }
+.vcblob1 { width:560px; height:560px; background:rgba(99,102,241,.13); top:-160px; left:-160px; animation:cFloat 16s ease-in-out infinite; }
+.vcblob2 { width:420px; height:420px; background:rgba(139,92,246,.10); bottom:-120px; right:-120px; animation:cFloat 12s ease-in-out infinite reverse; }
+@keyframes cFloat { 0%,100%{transform:translate(0,0)} 50%{transform:translate(28px,-28px)} }
+.vcontact-grid { position:fixed; inset:0; z-index:0; pointer-events:none; background-image:linear-gradient(rgba(99,102,241,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,.04) 1px,transparent 1px); background-size:50px 50px; }
+
+/* navbar */
+.vcontact-nav { position:relative; z-index:10; display:flex; align-items:center; justify-content:space-between; padding:18px 70px; background:rgba(15,23,42,.85); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); }
+.vcontact-logo { display:flex; align-items:center; gap:14px; text-decoration:none; }
+.vcontact-logo-icon { width:42px; height:42px; border-radius:12px; background:linear-gradient(135deg,var(--pri),var(--pri2)); display:flex; align-items:center; justify-content:center; color:white; font-size:18px; box-shadow:0 4px 14px rgba(99,102,241,.4); }
+.vcontact-logo-text span  { display:block; font-size:18px; font-weight:800; color:white; }
+.vcontact-logo-text small { display:block; font-size:11px; color:var(--muted); }
+.vcontact-navlinks { display:flex; align-items:center; gap:28px; }
+.vcontact-navlinks a { text-decoration:none; color:var(--muted); font-size:14px; font-weight:500; transition:.2s; }
+.vcontact-navlinks a:hover { color:white; }
+.vcontact-nav-cta { background:linear-gradient(135deg,var(--pri),var(--pri2)); color:white!important; padding:9px 20px; border-radius:10px; font-weight:600!important; box-shadow:0 4px 14px rgba(99,102,241,.35); transition:.3s!important; }
+.vcontact-nav-cta:hover { transform:translateY(-2px); }
+
+/* hero */
+.vcontact-hero { position:relative; z-index:5; text-align:center; padding:70px 20px 50px; }
+.vcontact-hero-label { display:inline-flex; align-items:center; gap:8px; background:rgba(99,102,241,.12); border:1px solid var(--border); color:var(--pri); font-size:13px; font-weight:600; padding:7px 16px; border-radius:30px; margin-bottom:24px; }
+.vcontact-hero h1 { font-size:52px; font-weight:800; color:white; margin-bottom:14px; }
+.vcontact-hero h1 span { background:linear-gradient(135deg,var(--pri),var(--pri2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.vcontact-hero > p { color:var(--muted); font-size:17px; }
+
+/* info row */
+.vcontact-info-row { position:relative; z-index:5; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px; width:90%; max-width:1200px; margin:0 auto 40px; }
+.vcontact-info-card { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:22px 20px; display:flex; align-items:center; gap:16px; transition:.3s; }
+.vcontact-info-card:hover { transform:translateY(-5px); border-color:rgba(99,102,241,.4); }
+.vcontact-info-icon { width:50px; height:50px; flex-shrink:0; background:linear-gradient(135deg,var(--pri),var(--pri2)); color:white; border-radius:14px; font-size:20px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(99,102,241,.3); }
+.vcontact-info-card h4 { font-size:13px; font-weight:700; color:var(--muted); margin-bottom:4px; text-transform:uppercase; letter-spacing:.5px; }
+.vcontact-info-card p  { font-size:14px; color:white; font-weight:600; }
+.vcontact-info-card small { font-size:12px; color:var(--muted); }
+
+/* body */
+.vcontact-body { position:relative; z-index:5; display:flex; gap:28px; align-items:flex-start; width:90%; max-width:1200px; margin:0 auto 70px; }
+
+/* form card */
+.vcontact-form-card { flex:1.5; background:var(--card); border:1px solid var(--border); border-radius:24px; padding:38px; }
+.vcontact-form-card h2 { font-size:24px; font-weight:800; color:white; margin-bottom:8px; }
+.vcontact-form-card > p { color:var(--muted); font-size:14px; margin-bottom:28px; }
+.vcontact-form { display:flex; flex-direction:column; gap:18px; }
+.vcontact-row { display:flex; gap:16px; }
+.vcontact-row .vcontact-field { flex:1; }
+.vcontact-field { display:flex; flex-direction:column; gap:8px; }
+.vcontact-field label { font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; }
+.vcontact-input-wrap { display:flex; align-items:center; gap:12px; border:1.5px solid var(--border); border-radius:12px; padding:0 16px; height:50px; background:rgba(255,255,255,.03); transition:.25s; }
+.vcontact-input-wrap:focus-within { border-color:var(--pri); box-shadow:0 0 0 4px rgba(99,102,241,.15); background:rgba(99,102,241,.06); }
+.vcontact-input-wrap svg { color:var(--muted); font-size:15px; flex-shrink:0; }
+.vcontact-input-wrap input { flex:1; border:none; outline:none; background:transparent; font-size:15px; color:var(--text); }
+.vcontact-input-wrap input::placeholder { color:#475569; }
+.vcontact-field textarea { border:1.5px solid var(--border); border-radius:12px; padding:14px 16px; font-size:15px; color:var(--text); background:rgba(255,255,255,.03); outline:none; resize:vertical; transition:.25s; }
+.vcontact-field textarea:focus { border-color:var(--pri); box-shadow:0 0 0 4px rgba(99,102,241,.15); background:rgba(99,102,241,.04); }
+.vcontact-field textarea::placeholder { color:#475569; }
+
+.vcontact-btn { display:flex; align-items:center; justify-content:center; gap:10px; height:50px; background:linear-gradient(135deg,var(--pri),var(--pri2)); color:white; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; transition:.3s; box-shadow:0 6px 20px rgba(99,102,241,.35); }
+.vcontact-btn:hover:not(:disabled) { transform:translateY(-3px); box-shadow:0 10px 28px rgba(99,102,241,.45); }
+.vcontact-btn:disabled { opacity:.7; cursor:not-allowed; }
+.vcontact-spinner { width:20px; height:20px; border:3px solid rgba(255,255,255,.3); border-top-color:white; border-radius:50%; animation:spin .7s linear infinite; display:inline-block; }
+@keyframes spin { to{transform:rotate(360deg)} }
+
+/* success */
+.vcontact-success { text-align:center; padding:40px 20px; }
+.vcontact-success svg { font-size:52px; color:#22c55e; margin-bottom:16px; }
+.vcontact-success h3 { font-size:24px; font-weight:800; color:#22c55e; margin-bottom:10px; }
+.vcontact-success p { color:var(--muted); font-size:15px; line-height:1.7; margin-bottom:24px; }
+.vcontact-success button { background:linear-gradient(135deg,var(--pri),var(--pri2)); color:white; border:none; padding:12px 28px; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; transition:.3s; }
+.vcontact-success button:hover { transform:translateY(-2px); }
+
+/* offices */
+.vcontact-offices { flex:1; display:flex; flex-direction:column; gap:18px; }
+.vcontact-offices h2 { font-size:22px; font-weight:800; color:white; }
+.vcontact-offices > p { color:var(--muted); font-size:14px; margin-top:4px; }
+.vcontact-office-list { display:flex; flex-direction:column; gap:14px; margin-top:4px; }
+.vcontact-office-card { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:22px; transition:.3s; }
+.vcontact-office-card:hover { transform:translateY(-4px); border-color:rgba(99,102,241,.4); }
+.vcontact-office-city { display:flex; align-items:center; gap:10px; font-size:17px; font-weight:700; color:white; margin-bottom:8px; }
+.vcontact-office-city svg { color:var(--pri); }
+.vcontact-office-card p { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:10px; }
+.vcontact-office-phone { display:flex; align-items:center; gap:8px; font-size:14px; font-weight:600; color:var(--text); }
+.vcontact-office-phone svg { color:#22c55e; }
+
+/* footer */
+.vcontact-footer { margin-top:auto; background:rgba(15,23,42,.95); border-top:1px solid var(--border); text-align:center; padding:28px 20px; font-size:13px; color:var(--muted); position:relative; z-index:5; }
+
+/* responsive */
+@media(max-width:900px){ .vcontact-body{flex-direction:column;} .vcontact-nav{padding:16px 20px; flex-wrap:wrap; gap:10px;} .vcontact-navlinks{display:none;} .vcontact-hero h1{font-size:36px;} .vcontact-row{flex-direction:column;} }
