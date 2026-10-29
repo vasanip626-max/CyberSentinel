@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "../../components/dashboard/Sidebar";
 import Navbar from "../../components/dashboard/Navbar";
-import { FaCog, FaUser, FaLock, FaBell, FaShieldAlt, FaSave } from "react-icons/fa";
+import { FaUser, FaShieldAlt, FaSave } from "react-icons/fa";
 import "./Dashboard.css";
 
 function Settings() {

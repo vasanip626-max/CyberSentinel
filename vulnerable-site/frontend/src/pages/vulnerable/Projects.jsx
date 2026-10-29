@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "../../components/dashboard/Sidebar";
 import Navbar from "../../components/dashboard/Navbar";
-import { FaProjectDiagram, FaPlus, FaFolderOpen, FaCheckCircle, FaClock, FaTasks } from "react-icons/fa";
+import { FaProjectDiagram, FaPlus, FaFolderOpen, FaCheckCircle, FaClock } from "react-icons/fa";
 import "./Dashboard.css";
 
 function Projects() {

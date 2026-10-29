@@ -84,6 +84,7 @@ function Dashboard() {
             window.removeEventListener("attack_detected", handleInstantAttack);
             window.removeEventListener("storage", handleInstantAttack);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const loadDashboard = async () => {

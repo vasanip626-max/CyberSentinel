@@ -1,3 +1,4 @@
+/* eslint-disable no-script-url */
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useParams, useSearchParams } from "react-router-dom";
 import {

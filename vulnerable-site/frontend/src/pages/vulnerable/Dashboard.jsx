@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+
 
 import Sidebar from "../../components/dashboard/Sidebar";
 import Navbar from "../../components/dashboard/Navbar";
@@ -22,7 +22,7 @@ import "./Dashboard.css";
 
 function Dashboard() {
 
-    const navigate = useNavigate();
+
 
     const user = JSON.parse(localStorage.getItem("lab_user"));
 

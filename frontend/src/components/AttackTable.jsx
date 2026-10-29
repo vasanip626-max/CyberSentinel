@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaFilePdf, FaShieldAlt, FaTimes, FaPrint, FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
+import { FaFilePdf, FaShieldAlt, FaTimes, FaPrint } from "react-icons/fa";
 import { generateIncidentReport } from "../services/aiService";
 
 function AttackTable({ attacks: propAttacks }) {
@@ -186,6 +186,7 @@ function AttackTable({ attacks: propAttacks }) {
                                 </td>
                                 <td>
                                     <button
+                                        disabled={loadingReport}
                                         onClick={() => handleGenerateReport(log)}
                                         style={{
                                             background: "rgba(0, 200, 255, 0.15)",
@@ -195,13 +196,14 @@ function AttackTable({ attacks: propAttacks }) {
                                             borderRadius: "8px",
                                             fontSize: "12px",
                                             fontWeight: "600",
-                                            cursor: "pointer",
+                                            cursor: loadingReport ? "not-allowed" : "pointer",
+                                            opacity: loadingReport ? 0.7 : 1,
                                             display: "flex",
                                             alignItems: "center",
                                             gap: "6px"
                                         }}
                                     >
-                                        <FaFilePdf /> Export Report
+                                        <FaFilePdf /> {loadingReport ? "Generating..." : "Export Report"}
                                     </button>
                                 </td>
                             </tr>

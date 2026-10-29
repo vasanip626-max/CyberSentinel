@@ -154,6 +154,25 @@ function ForgotPassword() {
                     </div>
                 )}
 
+                {/* Success Banner */}
+                {successMsg && (
+                    <div style={{
+                        background: "rgba(0, 255, 153, 0.15)",
+                        border: "1px solid rgba(0, 255, 153, 0.4)",
+                        color: "#00FF99",
+                        padding: "12px 16px",
+                        borderRadius: "10px",
+                        fontSize: "13px",
+                        fontWeight: "600",
+                        marginBottom: "20px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px"
+                    }}>
+                        <FaCheckCircle /> {successMsg}
+                    </div>
+                )}
+
                 {/* Email Sent Info Box */}
                 {step === 2 && (
                     <div style={{

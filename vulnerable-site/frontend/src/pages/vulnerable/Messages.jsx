@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "../../components/dashboard/Sidebar";
 import Navbar from "../../components/dashboard/Navbar";
-import { FaEnvelope, FaPaperPlane, FaUserCircle, FaShieldAlt, FaComments } from "react-icons/fa";
+import { FaPaperPlane, FaUserCircle, FaComments } from "react-icons/fa";
 import "./Dashboard.css";
 
 function Messages() {
